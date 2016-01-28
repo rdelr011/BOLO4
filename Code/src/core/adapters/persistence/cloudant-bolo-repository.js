@@ -245,6 +245,36 @@ CloudantBoloRepository.prototype.getBolos = function ( limit, skip ) {
     });
 };
 
+CloudantBoloRepository.prototype.searchBolos = function ( limit,skip,query_string) {
+
+    var query_obj =
+    {
+         q    : query_string,
+         limit: limit,
+         skip : skip,
+         include_docs:true
+
+    };
+
+    return db.search( 'bolo', 'bolos', query_obj).then( function (result ) {
+
+        console.log('Showing %d out of a total %d bolos found', result.rows.length, result.total_rows);
+        for (var i = 0; i < result.rows.length; i++) {
+            console.log('Document id: %s', result.rows[i].id);
+        }
+        var bolos = _.map( result.rows, function ( row ) {
+
+            return boloFromCloudant( row.doc );
+        });
+        return { 'bolos': bolos, total: result.total_rows };
+
+    })
+    .catch(function (error) {
+        return new Error(
+            'Failed to find bolo : ' + error.error + ' / ' + error.reason
+        );
+    });
+};
 
 CloudantBoloRepository.prototype.getArchiveBolos = function ( limit, skip ) {
     var opts = {

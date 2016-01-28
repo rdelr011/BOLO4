@@ -20,8 +20,8 @@ block content
                 .panel-heading: h3.panel-title Details
                 .panel-body
                     p <b>Author:</b> #{bolo.authorFName} #{bolo.authorLName}
-                    p <b>Agency:</b> 
-                        a( href="/agency/" + agency.id target="_blank" ) #{agency.name}
+                    p <b>Agency:</b>
+                       a( href="/agency/" + agency.id target="_blank" ) #{bolo.agency.name}
                     p <b>Created:</b> #{bolo.createdOn}
                     p <b>Updated:</b> #{bolo.lastUpdatedOn}
 

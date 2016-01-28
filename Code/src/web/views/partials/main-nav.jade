@@ -18,11 +18,12 @@ mixin dropdown_menu ( label )
 +nav( "BOLO Version 3.0", "bolo-nav" )
     if userLoggedIn
         ul.nav.navbar-nav
+            li: a( href="/bolo" ) Home
             +dropdown_menu( 'BOLO Menu' )
                 li: a( href="/bolo/create" ) New BOLO
-                li: a( href="/bolo" ) Active BOLOs
                 li: a( href="/bolo/archive" ) Archived BOLOs
             li: a( href="/agency" ) Agency Directory
+            li: a( href="/bolo/search" ) Search
 
         ul.nav.navbar-nav.navbar-right
             li: a( href="/account" ) Logged in as <b>#{username}</b>

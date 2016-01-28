@@ -80,7 +80,12 @@ BoloService.prototype.getArchiveBolos = function ( limit, skip ) {
 BoloService.prototype.activate = function ( id, activate ) {
     return this.boloRepository.activate( id, activate );
 };
+BoloService.prototype.searchBolos = function(limit,skip,query_string){
 
+    var result = this.boloRepository.searchBolos(limit,skip, query_string);
+    return result;
+
+};
 BoloService.prototype.removeBolo = function ( id ) {
     return this.boloRepository.delete( id );
 };

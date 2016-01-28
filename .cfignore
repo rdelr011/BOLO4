@@ -1,6 +1,0 @@
-node_modules
-jsdoc
-coverage
-
-.env
-.env.sample

@@ -37,7 +37,7 @@ function Bolo( data ) {
         id              : null,
         createdOn       : '',
         lastUpdatedOn   : '',
-        agency          : '',
+        agency          : null,
         author          : '',
         category        : '',
         firstName       : '',
