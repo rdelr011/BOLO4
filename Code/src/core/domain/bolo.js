@@ -100,6 +100,7 @@ Bolo.prototype.same = function ( other ) {
  */
 Bolo.prototype.diff = function ( other ) {
     var source = this;
+
     return Object.getOwnPropertyNames( source.data )
         .filter( function ( key ) {
             return ! _.isEqual( other.data[key], source.data[key] );

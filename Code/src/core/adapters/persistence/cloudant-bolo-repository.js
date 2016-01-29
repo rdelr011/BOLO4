@@ -247,11 +247,10 @@ CloudantBoloRepository.prototype.getBolos = function ( limit, skip ) {
 
 CloudantBoloRepository.prototype.searchBolos = function ( limit,skip,query_string) {
 
+    console.log(query_string);
     var query_obj =
     {
          q    : query_string,
-         limit: limit,
-         skip : skip,
          include_docs:true
 
     };

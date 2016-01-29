@@ -32,7 +32,7 @@ agencyService.searchAgencies("name:PineCrest").then( function ( results ) {
             "password": process.argv[3],
             "email": process.argv[2] + "@example.com",
             "tier": 3,
-            "agency": 'o'
+            "agency": agencies[0].id
         });
 
         console.log(

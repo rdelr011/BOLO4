@@ -9,14 +9,15 @@ require('dotenv').config({'path': path.resolve(__dirname, '../.env')});
 
 var cloudant = require('./cloudant-connection.js');
 
-var indexing = false;
 
 var bolo_indexer = function (doc) {
 
     index("default", doc._id);
+
     if (typeof(doc.agency) !== 'undefined') {
         index("agency", doc.agency);
     }
+
     if (typeof(doc.createdOn) !== 'undefined') {
         index("createdOn", doc.createdOn);
     }
@@ -51,7 +52,7 @@ var bolo_indexer = function (doc) {
         index("height", doc.height);
     }
     if (typeof(doc.weight) !== 'undefined') {
-        index("min_length", doc.weight);
+        index("weight", doc.weight);
     }
     if (typeof(doc.hairColor) !== 'undefined') {
         index("hairColor", doc.hairColor);
@@ -64,25 +65,59 @@ var agency_indexer = function (doc) {
 
     index("default", doc._id);
     if (typeof(doc.name) !== 'undefined') {
-        index("name", doc.name ,{"store": true});
+        index("name", doc.name );
     }
     if (typeof(doc.address) !== 'undefined') {
-        index("address", doc.address ,{"store": true});
+        index("address", doc.address );
     }
     if (typeof(doc.city) !== 'undefined') {
-        index("city", doc.city ,{"store": true});
+        index("city", doc.city);
     }
     if (typeof(doc.state) !== 'undefined') {
-        index("state", doc.state ,{"store": true});
+        index("state", doc.state );
     }
     if (typeof(doc.zip) !== 'undefined') {
-        index("zip", doc.zip ,{"store": true});
+        index("zip", doc.zip );
     }
     if (typeof(doc.phone) !== 'undefined') {
-        index("phone", doc.phone ,{"store": true});
+        index("phone", doc.phone );
     }
     if (typeof(doc.isActive) !== 'undefined') {
-        index("isActive", doc.isActive ,{"store": true});
+        index("isActive", doc.isActive );
+    }
+
+};
+
+var user_indexer = function (doc) {
+
+    index("default", doc._id);
+    if (typeof(doc.username) !== 'undefined') {
+        index("username", doc.username );
+    }
+    if (typeof(doc.email) !== 'undefined') {
+        index("email", doc.email );
+    }
+    if (typeof(doc.fname) !== 'undefined') {
+        index("fname", doc.fname );
+    }
+    if (typeof(doc.lname) !== 'undefined') {
+        index("lname", doc.lname );
+    }
+    if (typeof(doc.tier) !== 'undefined') {
+        index("tier", doc.tier );
+    }
+    if (typeof(doc.agency) !== 'undefined') {
+        index("agency", doc.agency);
+    }
+
+    if (typeof(doc.badge) !== 'undefined') {
+        index("badge", doc.badge );
+    }
+    if (typeof(doc.sectunit) !== 'undefined') {
+        index("sectunit", doc.sectunit );
+    }
+    if (typeof(doc.ranktitle) !== 'undefined') {
+        index("ranktitle", doc.ranktitle );
     }
 
 };
@@ -125,6 +160,13 @@ var USERS_DESIGN_DOC = {
         },
         "notifications": {
             "map": "function (doc) { if ( 'user' === doc.Type ) { for ( var i = 0; i < doc.notifications.length; i++ ) { emit( doc.notifications[i], doc.email ); } } }"
+        }
+    },
+
+    indexes: {
+        users: {
+            analyzer: {name: 'standard'},
+            index: user_indexer
         }
     }
 };

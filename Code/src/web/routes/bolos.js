@@ -70,11 +70,9 @@ function getAllBoloData ( id ) {
 console.log("called get all bolo data");
     return boloService.getBolo( id ).then( function ( bolo ) {
         data.bolo = bolo;
-        console.log(bolo.id);
-        console.log(bolo.agency);
-        console.log(bolo.author);
+
         return Promise.all([
-           // agencyService.getAgency( bolo.agency ),
+            agencyService.getAgency( bolo.agency ),
             userService.getUser( bolo.author )
         ]);
     }).then( function ( responses ) {
@@ -141,7 +139,7 @@ router.get( '/bolo/archive', function ( req, res, next ) {
 router.get( '/bolo/search/results', function ( req, res ) {
 
     var query_string = req.query.valid;
-
+console.log('query string: '+ query_string);
     // Do something with variable
     var page = parseInt( req.query.page ) || 1;
     var limit = config.const.BOLOS_PER_PAGE;
@@ -227,6 +225,7 @@ router.post( '/bolo/create', function ( req, res, next ) {
         boloDTO.createdOn = moment().format( config.const.DATE_FORMAT );
         boloDTO.lastUpdatedOn = boloDTO.createdOn;
 
+
         boloDTO.agency = req.user.agency;
 
         boloDTO.author = req.user.id;
@@ -271,12 +270,10 @@ router.get( '/bolo/edit/:id', function ( req, res, next ) {
 
     getAllBoloData( req.params.id ).then( function(boloData)   {
 
-        console.log('req user '+req.user);
         _.extend(data, boloData);
 
         var auth = new BoloAuthorize( data.bolo, data.author, req.user );
 
-        console.log("first name is " + data.firstName);
         if ( auth.authorizedToEdit() ) {
             res.render( 'bolo-edit-form', data );
         }
@@ -427,7 +424,7 @@ router.get( '/bolo/details/:id', function ( req, res, next ) {
     console.log(req.params.id);
     boloService.getBolo( req.params.id ).then( function ( bolo ) {
         data.bolo = bolo;
-        //return agencyService.getAgency( bolo.agency );
+        return agencyService.getAgency( bolo.agency );
     }).then( function ( agency ) {
         data.agency = agency;
         res.render( 'bolo-details', data );
