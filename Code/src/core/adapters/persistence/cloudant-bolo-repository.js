@@ -245,15 +245,19 @@ CloudantBoloRepository.prototype.getBolos = function ( limit, skip ) {
     });
 };
 
-CloudantBoloRepository.prototype.searchBolos = function ( limit,skip,query_string) {
+CloudantBoloRepository.prototype.searchBolos = function (limit,query_string,bookmark) {
 
-    console.log(query_string);
+
     var query_obj =
     {
-         q    : query_string,
-         include_docs:true
+        q      : query_string,
+        limit   : limit,
+        bookmark: bookmark,
+        include_docs:true
 
     };
+
+    console.log(JSON.stringify(query_obj));
 
     return db.search( 'bolo', 'bolos', query_obj).then( function (result ) {
 
@@ -265,7 +269,23 @@ CloudantBoloRepository.prototype.searchBolos = function ( limit,skip,query_strin
 
             return boloFromCloudant( row.doc );
         });
-        return { 'bolos': bolos, total: result.total_rows };
+        var flag = true;
+        while(flag ===true) {
+            flag = false;
+            for (var i = 0; i < bolos.length-1; i++) {
+
+                var date_one = bolos[i].createdOn;
+                var date_two = bolos[i + 1].createdOn;
+                var order = date_one > date_two ? 1 : date_one < date_two ? -1 : 0;
+                if (order === -1) {
+                    var swap = bolos[i + 1];
+                    bolos[i + 1] = bolos[i];
+                    bolos[i] = swap;
+                    flag = true;
+                }
+            }
+        }
+        return { 'bolos': bolos, total: result.total_rows, returned: result.rows.length, bookmark: result.bookmark };
 
     })
     .catch(function (error) {

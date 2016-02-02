@@ -136,21 +136,31 @@ router.get( '/bolo/archive', function ( req, res, next ) {
         next( error );
     });
 });
+
+
 router.get( '/bolo/search/results', function ( req, res ) {
 
+    console.log(req.query.bookmark );
     var query_string = req.query.valid;
-console.log('query string: '+ query_string);
+    console.log(query_string);
+    var data = {bookmark: req.query.bookmark || {} ,more:true ,query:query_string};
     // Do something with variable
-    var page = parseInt( req.query.page ) || 1;
     var limit = config.const.BOLOS_PER_PAGE;
-    var skip = ( 1 <= page ) ? ( page - 1 ) * limit : 0;
-    var data = {
-        'paging': { 'first': 1, 'current': page }
-    };
 
-    boloService.searchBolos( limit, skip, query_string).then( function ( results ) {
+    boloService.searchBolos(limit,query_string,data.bookmark).then( function ( results ) {
+        data.paging = results.total > limit;
+
+        if (results.returned < limit)
+        {
+            console.log('theres no more!!');
+            data.more = false; //indicate that another page exists
+        }
+
+
+            data.previous_bookmark = data.bookmark || {};
+            data.bookmark = results.bookmark;
+
         data.bolos = results.bolos;
-        data.paging.last = Math.ceil( results.total / limit );
         res.render( 'bolo-search-results', data );
     })
         .catch( function ( error ) {
@@ -176,25 +186,32 @@ router.post( '/bolo/search', function ( req, res, next ) {
         var key = '';
         var value = '';
         var MATCH_EXPR = ' OR ';
+        var expression = false;
 
         if (query_obj['matchFields'] === "on")
         {
             MATCH_EXPR = ' AND ';
         }
 
-        for (var i = 0; i < Object.keys(query_obj).length; i++)
-        {
-             key = Object.keys(query_obj)[i];
-             value = query_obj[Object.keys(query_obj)[i]];
-
-            if (key !== "status" && key !== 'matchFields' && value !== "" && i < Object.keys(query_obj).length-1) {
-                query_string += key + ':' + value + MATCH_EXPR;
-
-            }
-            else if (key !== "status" && key !== 'matchFields' && value !== "" && i === Object.keys(query_obj).length - 1) {
+        for (var i = 0; i < Object.keys(query_obj).length; i++) {
+            key = Object.keys(query_obj)[i];
+            value = query_obj[Object.keys(query_obj)[i]];
+        console.log(key+':'+value);
+            if (key !== "status" && key !== 'matchFields' && value !== "" ) {
+                if(expression === true) {
+                    query_string += MATCH_EXPR;
+                    expression = false;
+                }
                 query_string += key + ':' + value;
-
+                expression = true;
             }
+
+        }
+
+        //form was empty, return empty object
+        if(query_string === '')
+        {
+            query_string = {};
         }
         return query_string;
 
@@ -222,9 +239,10 @@ router.post( '/bolo/create', function ( req, res, next ) {
         var boloDTO = boloService.formatDTO( formDTO.fields );
         var attDTOs = [];
 
-        boloDTO.createdOn = moment().format( config.const.DATE_FORMAT );
+        boloDTO.createdOn = moment().format( config.const.DATE_FORMAT);
+        boloDTO.createdOn = boloDTO.createdOn.toString();
+        console.log(boloDTO.createdOn);
         boloDTO.lastUpdatedOn = boloDTO.createdOn;
-
 
         boloDTO.agency = req.user.agency;
 
