@@ -1,9 +1,8 @@
-# BOLO Flier Creator Version 3
+# BOLO Flier Creator Version 4
 
-This project is the third iteration of the BOLO Flier Creator application
-concepted by the Pinecrest Police Department in Miami, Florida.  The third
-version aims to re-engineer the application for security and scalability
-through the use of newer technologies both in hardware and software.
+This project is the fourth iteration of the BOLO Flier Creator application
+conceptualized by the Pinecrest Police Department in Miami, Florida.  The fourth
+version aims to push the project to deployment while adding more features and
 
 The current application stack consists of:
 
@@ -13,10 +12,10 @@ The current application stack consists of:
 - [Cloudant](http://cloudant.com)
 - [SendGrid](https://sendgrid.com/)
 
-
 ## How to use
 
-This app is designed to be used in a Node.js environment. Version 3 of the BOLO
+This app is designed to be used in a Node.js environment. Version 4 of the BOLO
+
 Flier Creator is designed to be used in conjunction with the Bluemix PaaS and
 CloudFoundry.
 
@@ -74,11 +73,13 @@ Coverage reports are stored in `./coverage` directory.
 To run individual tests:  
 `mocha test/unit` -or- `npm run unit-test`  
 `mocha test/integration`
+`mocha test/functional`
 
 The --watch flag can be used to watch for any changes to tests during
 development:  
 `mocha --watch test/unit`  
 `mocha --watch test/integration`
+`mocha --watch test/functional`
 
 Note that acceptance tests have not been implemented yet. The project plans
 to use WebDriver for accpetance tests against user story scenarios. Changes
@@ -94,7 +95,6 @@ The project requires all source code to be documented using
 Generating the documentation is easy! Make sure that JSDoc is installed by
 using the `npm install` command. Then type `npm run docs` and that's it.
 Open jsdoc/index.html file in your browser to read. Enjoy.
-
 
 ## References
 

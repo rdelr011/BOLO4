@@ -1,7 +1,4 @@
 /**
- * Created by Ed on 1/27/2016.
- */
-/**
  * Created by Ed on 1/21/2016.
  */
 /* jshint node:true */
