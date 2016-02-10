@@ -270,17 +270,16 @@ CloudantBoloRepository.prototype.searchBolos = function (limit,query_string,book
             return boloFromCloudant( row.doc );
         });
         var flag = true;
-        while(flag ===true) {
+        while(flag === true) {
             flag = false;
-            for (var i = 0; i < bolos.length-1; i++) {
-
-                var date_one = bolos[i].createdOn;
-                var date_two = bolos[i + 1].createdOn;
+            for (var j = 0; j < bolos.length-1; j++) {
+                var date_one = bolos[j].createdOn;
+                var date_two = bolos[j + 1].createdOn;
                 var order = date_one > date_two ? 1 : date_one < date_two ? -1 : 0;
                 if (order === -1) {
-                    var swap = bolos[i + 1];
-                    bolos[i + 1] = bolos[i];
-                    bolos[i] = swap;
+                    var swap = bolos[j + 1];
+                    bolos[j + 1] = bolos[j];
+                    bolos[j] = swap;
                     flag = true;
                 }
             }

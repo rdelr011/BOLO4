@@ -138,7 +138,7 @@ router.get( '/bolo/archive', function ( req, res, next ) {
 });
 
 
-router.get( '/bolo/search/results', function ( req, res ) {
+router.get( '/bolo/search/results', function ( req, res, next ) {
 
     console.log(req.query.bookmark );
     var query_string = req.query.valid;
@@ -162,8 +162,7 @@ router.get( '/bolo/search/results', function ( req, res ) {
 
         data.bolos = results.bolos;
         res.render( 'bolo-search-results', data );
-    })
-        .catch( function ( error ) {
+    }).catch( function ( error ) {
         next( error );
     });
 
@@ -188,7 +187,7 @@ router.post( '/bolo/search', function ( req, res, next ) {
         var MATCH_EXPR = ' OR ';
         var expression = false;
 
-        if (query_obj['matchFields'] === "on")
+        if ( "on" === query_obj.matchFields )
         {
             MATCH_EXPR = ' AND ';
         }

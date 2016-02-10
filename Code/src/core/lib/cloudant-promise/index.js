@@ -94,8 +94,7 @@ db_wrapper.search = function ( designname, searchname, params ) {
     return new Promise( function ( resolve, reject ) {
         context.db.search( designname, searchname, params, function ( err, body ) {
 
-            if ( !err ) {
-                resolve( body )};
+            if ( !err ) resolve( body );
             reject( err );
         });
     });
